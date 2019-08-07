@@ -14,6 +14,7 @@ namespace openweatherApiProject
     {
         static string appid = "31362b85f4a911192388e8512299ae37";
 
+        [Ignore]
         [TestMethod]
         public void RestSharpTestForecast()
         {
@@ -32,9 +33,11 @@ namespace openweatherApiProject
             Assert.AreEqual("Moscow", content.city.name);
         }
       
+       [Ignore]
        [TestMethod]
        public void RestSharpTestWeather()
        {
+
            RestApiHelper<Parameters> restApi = new RestApiHelper<Parameters>();
            NameValueCollection paramCollection = new NameValueCollection();
            string operationName = "weather";
@@ -50,6 +53,7 @@ namespace openweatherApiProject
            Assert.IsNotNull(content.main.temp);
        }
 
+        [Ignore]
         [TestMethod]
         public void RestSharpTestStationsPut()
         {
@@ -156,7 +160,6 @@ namespace openweatherApiProject
             var restUrl = restApi.SetUrl(restApi.QueryBuilder(operationName, id, paramCollection));
             var restRequest = restApi.CreatePutRequest(jsonRequest);
             restApi.GetResponse(restUrl, restRequest);
-
         }
 
     }

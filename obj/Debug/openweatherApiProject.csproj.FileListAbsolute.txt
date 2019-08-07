@@ -18,3 +18,4 @@ C:\Users\Uladzimir_Papeka\source\repos\openweatherApiProject\bin\Debug\Microsoft
 C:\Users\Uladzimir_Papeka\source\repos\openweatherApiProject\bin\Debug\NLog.dll
 C:\Users\Uladzimir_Papeka\source\repos\openweatherApiProject\bin\Debug\NLog.xml
 C:\Users\Uladzimir_Papeka\source\repos\openweatherApiProject\bin\Debug\NLog.config
+C:\Users\Uladzimir_Papeka\source\repos\openweatherApiProject\obj\Debug\openweatherApiProject.csprojAssemblyReference.cache
