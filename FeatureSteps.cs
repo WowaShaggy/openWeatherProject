@@ -2,6 +2,7 @@
 using openweatherApiProject;
 using System;
 using System.Collections.Specialized;
+using System.Net;
 using TechTalk.SpecFlow;
 
 namespace bddSpec
@@ -15,6 +16,9 @@ namespace bddSpec
         static string appid = "31362b85f4a911192388e8512299ae37";
         string operationName;
         string id;
+        string newStationID;
+        HttpStatusCode responseCode;
+
 
         [Before("stations")]
         public void BeforeScenario() {
@@ -52,6 +56,7 @@ namespace bddSpec
         }
         
         [When(@"I add my AppId")]
+        [Given(@"I add my AppId")]
         public void WhenIAddMyAppId()
         {
             paramCollection.Add("APPID", appid);
@@ -67,6 +72,7 @@ namespace bddSpec
         }
 
         [When(@"I send GET request with id")]
+        [Given(@"I send GET request with id")]
         public void WhenISendGETRequestWithId()
         {
             var restUrl = restApi.SetUrl(restApi.QueryBuilder(operationName, id, paramCollection));
@@ -94,6 +100,7 @@ namespace bddSpec
         }
 
         [Then(@"Name should be equal ""(.*)""")]
+        [Given(@"Name should be equal ""(.*)""")]
         public void ThenNameShouldBeEqual(string p0)
         {
             Assert.AreEqual(p0, content.name);
@@ -106,7 +113,7 @@ namespace bddSpec
         }
 
 
-        [When(@"I gonna get station ""(.*)"" request")]
+        [Given(@"I gonna get station ""(.*)"" request")]
         public void WhenIGonnaGetStationRequest(string p0)
         {
             restApi = new RestApiHelper<Parameters>(p0);
@@ -114,12 +121,11 @@ namespace bddSpec
             paramCollection = new NameValueCollection();
         }
 
-        [When(@"I add id ""(.*)""")]
+        [Given(@"I add id ""(.*)""")]
         public void WhenIAddId(string p0)
         {
             id = p0;
         }
-
 
         [When(@"Name should be equal ""(.*)""")]
         public void WhenNameShouldBeEqual(string p0)
@@ -128,24 +134,28 @@ namespace bddSpec
         }
 
         [When(@"Longitude should be equal (.*)")]
+        [Given(@"Longitude should be equal (.*)")]
         public void WhenLongitudeShouldBeEqual(Double p0)
         {
             Assert.AreEqual(p0, content.longitude);
         }
 
         [When(@"Latitude should be equal (.*)")]
+        [Given(@"Latitude should be equal (.*)")]
         public void WhenLatitudeShouldBeEqual(Double p0)
         {
             Assert.AreEqual(p0, content.latitude);
         }
 
         [When(@"Altitude should be equal (.*)")]
+        [Given(@"Altitude should be equal (.*)")]
         public void WhenAltitudeShouldBeEqual(int p0)
         {
             Assert.AreEqual(p0, content.altitude);
         }
 
         [Then(@"I send PUT request")]
+        [When(@"I send PUT request")]
         public void ThenISendPUTRequest()
         {
             var restUrl = restApi.SetUrl(restApi.QueryBuilder(operationName, id, paramCollection));
@@ -183,6 +193,51 @@ namespace bddSpec
         public void ThenAltitudeShouldNotBeEqual(int p0)
         {
             Assert.AreNotEqual(p0, content.altitude);
+        }
+
+        [Given(@"I send POST request")]
+        public void GivenISendPOSTRequest()
+        {
+            string jsonRequest = @"{
+                                     ""external_id"": ""SF_TEST020"",
+                                     ""name"": ""Brest"",
+                                     ""longitude"": -122.43,
+                                     ""latitude"": 37.76,
+                                     ""altitude"": 150
+                                   }";
+            var restUrl = restApi.SetUrl(restApi.QueryBuilder(operationName, paramCollection));
+            var restRequest = restApi.CreatePostRequest(jsonRequest);
+            var response = restApi.GetResponse(restUrl, restRequest);
+            content = restApi.GetContent<Parameters>(response);
+        }
+
+        [Given(@"Id should not be empty")]
+        public void GivenIdShouldNotBeEmpty()
+        {
+            Assert.IsNotNull(content.ID);
+            newStationID = content.ID;
+        }
+
+        [When(@"I send DELETE request by ID")]
+        public void WhenISendDELETERequestByID()
+        {
+            var restUrl = restApi.SetUrl(restApi.QueryBuilder(operationName, newStationID, paramCollection));
+            var restRequest = restApi.CreateDeleteRequest();
+            var response = restApi.GetResponse(restUrl, restRequest);
+            responseCode = response.StatusCode;
+            content = restApi.GetContent<Parameters>(response);
+        }
+
+        [Then(@"Status codeare is NoContent")]
+        public void ThenStatusCodeareIsNoContent()
+        {
+            Assert.AreEqual(HttpStatusCode.NoContent, responseCode);
+        }
+
+        [Then(@"Content is empty")]
+        public void ThenContentIsEmpty()
+        {
+            Assert.IsNull(content);
         }
 
     }

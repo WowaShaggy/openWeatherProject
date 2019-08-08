@@ -91,6 +91,7 @@ namespace openweatherApiProject
             Assert.AreNotEqual(altitudeValueBefore, content.altitude);
         }
 
+        [Ignore]
         [TestMethod]
         public void RestSharpTestStationsPostAndDelete()
         {
@@ -122,6 +123,7 @@ namespace openweatherApiProject
             Assert.IsNull(content);
         }
 
+       [Ignore]
        [TestMethod]
        public void HttpWebClientsAndStreamReaderTest()
        {
